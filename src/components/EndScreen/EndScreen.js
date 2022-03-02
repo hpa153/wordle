@@ -95,7 +95,6 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
     let data;
     try {
       data = JSON.parse(dataString);
-      console.log(data);
     } catch (error) {
       console.log("Unable to parse data: " + error);
     }
@@ -106,7 +105,6 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
     // Get wins
     const values = Object.values(data);
     const numOfWins = values.filter(game => game.gameState !== "lose").length;
-    console.log(numOfWins)
 
     // Get current streak
     let _curStreak = 0;
