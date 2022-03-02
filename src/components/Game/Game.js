@@ -20,6 +20,7 @@ export default function Game() {
   const year = date.getFullYear();
   const dayKey = `day-${today}-${year}`;
   const [word, setWord] = useState(words[today]);
+  console.log(word);
   const letters = word.split("");
   const [rows, setRows] = useState(new Array(NUMBER_OF_TRIES)
     .fill(new Array(letters.length).fill("")));
@@ -177,7 +178,7 @@ export default function Game() {
     return <ActivityIndicator />;
   }
 
-  if (gameState !== "playing") {    
+  if (gameState !== "playing") {
     return (<EndScreen won={gameState === "won"} rows={rows} getCellBGColor={getCellBGColor} />);
   }
 

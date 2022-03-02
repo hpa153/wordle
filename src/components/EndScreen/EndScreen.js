@@ -104,7 +104,7 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
 
     // Get wins
     const values = Object.values(data);
-    const numOfWins = values.filter(game => game.gameState !== "lose").length;
+    const numOfWins = values.filter(game => game.gameState === "won").length;
 
     // Get current streak
     let _curStreak = 0;
@@ -114,9 +114,9 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
     keys.forEach((key) => {
       const day = parseInt(key.split("-")[1]);
 
-      if (data[key].gameState !== "lose" && _curStreak === 0) {
+      if (data[key].gameState === "won" && _curStreak === 0) {
         ++_curStreak;
-      } else if (data[key].gameState !== "lose" && prevDay + 1 === day) {
+      } else if (data[key].gameState === "won" && prevDay + 1 === day) {
         ++_curStreak;
       } else {
         _curStreak = won ? 1 : 0;
@@ -131,7 +131,7 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
 
     let _distribution = [0, 0, 0, 0, 0, 0];
     values.map((game) => {
-      if (game.gameState !== "lose") {
+      if (game.gameState === "won") {
         const tries = game.rows.filter(row => row[0]).length;
         _distribution[tries - 1] = _distribution[tries - 1] + 1;
       }
