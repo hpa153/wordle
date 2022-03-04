@@ -20,7 +20,6 @@ export default function Game() {
   const year = date.getFullYear();
   const dayKey = `day-${today}-${year}`;
   const [word, setWord] = useState(words[today]);
-  // console.log(word);
   const letters = word.split("");
   const [rows, setRows] = useState(new Array(NUMBER_OF_TRIES)
     .fill(new Array(letters.length).fill("")));
@@ -28,12 +27,7 @@ export default function Game() {
   const [curCol, setCurCol] = useState(0);
   const [gameState, setGameState] = useState("playing");
   const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (curRow > 0) {
-      checkGameState();
-    }
-  }, [curRow, curCol]);
+  const [cacheUpdating, setCacheUpdating] = useState(false);
 
   useEffect(() => {
     if (loaded) {
@@ -61,16 +55,16 @@ export default function Game() {
         setRows(updatedRows);
         setCurCol(prevCol);
       }
-
       return;
     }
 
     if (key === ENTER) {
       if (curCol === rows[0].length) {
+        setCacheUpdating(true);
+        checkGameState();
         setCurRow(curRow + 1);
         setCurCol(0);
       }
-
       return;
     }
 
@@ -124,14 +118,18 @@ export default function Game() {
 
   // Check if player won
   const checkWin = () => {
-    const row = rows[curRow - 1];
+    const row = rows[curRow];
 
-    return row.every((letter, i) => letter === letters[i]);
+    return !row ? false : row.every((letter, i) => letter === letters[i]);
   }
 
   // Check if player lost
   const checkLose = () => {
-    return !checkWin() && curRow === rows.length;
+    const row = rows[curRow];
+    if (!row) {
+      return false;
+    }
+    return !row.every((letter, i) => letter === letters[i]) && curRow === rows.length;
   }
 
   // Cache all states of the game
@@ -154,13 +152,15 @@ export default function Game() {
       await AsyncStorage.setItem('@game', dataString);
     } catch (error) {
       console.log("Unable to cache states: " + error);
+    } finally {
+      setCacheUpdating(false)
     }
   }
 
   // Read states from async storage
   const readState = async () => {
     const dataString = await AsyncStorage.getItem("@game");
-
+    
     try {
       const data = JSON.parse(dataString);
       const day = data[dayKey];
@@ -178,7 +178,7 @@ export default function Game() {
     return <ActivityIndicator />;
   }
 
-  if (gameState !== "playing") {
+  if (gameState !== "playing" && !cacheUpdating) {
     return (<EndScreen won={gameState === "won"} rows={rows} getCellBGColor={getCellBGColor} />);
   }
 
@@ -216,5 +216,6 @@ export default function Game() {
         greyCaps={greyCaps}
       />
     </SafeAreaView>
+    
   );
 }

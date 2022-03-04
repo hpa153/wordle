@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, colorsToEmoji } from '../../constants';
 import styles from './styles';
 
+// Components to display
 const Records = ({ number, label }) => (
   <View style={styles.numberContainer}>
     <Text style={styles.number}>{number}</Text>
@@ -37,11 +38,10 @@ const GuessDistribution = ({distribution}) => {
             <GuessDistributionLine key={index} position={index + 1} amount={dist} percentage={dist / sum * 100} />
           ))
         }
-        
       </View>
     </>
   )
-}
+}; // end of components
 
 export default function EndScreen({ won, rows, getCellBGColor }) {
   const [secondsTillTomorrow, setsecondsTillTomorrow] = useState(0);
@@ -98,8 +98,8 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
     } catch (error) {
       console.log("Unable to parse data: " + error);
     }
-    
-    // Get played
+    // console.log(data['day-62-2022'].gameState)
+    // Get played games
     const keys = Object.keys(data);
 
     // Get wins
@@ -129,6 +129,7 @@ export default function EndScreen({ won, rows, getCellBGColor }) {
       prevDay = day;
     });
 
+    // Get guess distributions
     let _distribution = [0, 0, 0, 0, 0, 0];
     values.map((game) => {
       if (game.gameState === "won") {
