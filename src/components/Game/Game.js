@@ -112,7 +112,6 @@ export default function Game() {
     if (checkWin()) {
       setGameState("won");
     } else if (checkLose()) {
-      console.log("gameState: lost")
       setGameState("lost");
     }
   };
