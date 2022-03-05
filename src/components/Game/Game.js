@@ -61,8 +61,8 @@ export default function Game() {
     if (key === ENTER) {
       if (curCol === rows[0].length) {
         setCacheUpdating(true);
-        checkGameState();
         setCurRow(curRow + 1);
+        checkGameState();
         setCurCol(0);
       }
       return;
@@ -112,6 +112,7 @@ export default function Game() {
     if (checkWin()) {
       setGameState("won");
     } else if (checkLose()) {
+      console.log("gameState: lost")
       setGameState("lost");
     }
   };
@@ -125,11 +126,7 @@ export default function Game() {
 
   // Check if player lost
   const checkLose = () => {
-    const row = rows[curRow];
-    if (!row) {
-      return false;
-    }
-    return !row.every((letter, i) => letter === letters[i]) && curRow === rows.length;
+    return !checkWin() && curRow === rows.length - 1;
   }
 
   // Cache all states of the game
